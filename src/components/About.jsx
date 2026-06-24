@@ -9,11 +9,11 @@ const Wrap = styled.section`
 `;
 
 const Inner = styled.div`
-  max-width: 1400px;
+  max-width: 1200px;
   margin: 0 auto;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 6rem;
+  gap: 5rem;
   align-items: center;
 
   @media (max-width: 900px) {
@@ -22,65 +22,60 @@ const Inner = styled.div`
   }
 `;
 
-const ImgSide = styled.div`
-  position: relative;
+const VisualSide = styled.div``;
+
+const VisualGrid = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
 `;
 
-const PhotoFrame = styled.div`
-  position: relative;
+const QuoteCard = styled.div`
+  grid-column: 1 / -1;
+  background: #1c1914;
+  border-left: 3px solid var(--accent);
   border-radius: var(--radius);
-  overflow: hidden;
-  aspect-ratio: 4 / 5;
-  max-width: 420px;
-  box-shadow: var(--shadow-md);
-
-  &::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(to top, rgba(250, 250, 248, 0.5) 0%, transparent 50%);
-    pointer-events: none;
-  }
-
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-  }
+  padding: 2.2rem 2.6rem;
 `;
 
-const StatStrip = styled.div`
-  position: absolute;
-  bottom: -20px;
-  left: -20px;
-  right: 20px;
+const QuoteTag = styled.span`
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.38);
+  margin-bottom: 1rem;
+`;
+
+const QuoteText = styled.p`
+  font-size: clamp(1rem, 2vw, 1.2rem);
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.88);
+  line-height: 1.6;
+  letter-spacing: -0.1px;
+`;
+
+const MetricCard = styled.div`
   background: var(--bg-surface);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 1.4rem 1.8rem;
-  display: flex;
-  gap: 2rem;
-  z-index: 2;
-  box-shadow: var(--shadow-md);
-
-  @media (max-width: 480px) { position: static; margin-top: 1rem; }
+  padding: 1.5rem 1.6rem;
 `;
 
-const Stat = styled.div``;
-
-const StatNum = styled.div`
-  font-size: 1.8rem;
-  font-weight: 900;
+const MetricNum = styled.div`
+  font-size: 2rem;
+  font-weight: 700;
   letter-spacing: -1px;
   color: var(--accent);
   line-height: 1;
+  margin-bottom: 0.4rem;
 `;
 
-const StatLabel = styled.div`
-  font-size: 0.78rem;
-  color: var(--text-lo);
-  margin-top: 0.2rem;
+const MetricLabel = styled.div`
+  font-size: 0.82rem;
+  color: var(--text-mid);
+  line-height: 1.4;
 `;
 
 const TextSide = styled.div``;
@@ -88,7 +83,7 @@ const TextSide = styled.div``;
 const Label = styled.span`
   display: block;
   font-size: 0.78rem;
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: 1.8px;
   text-transform: uppercase;
   color: var(--accent);
@@ -97,9 +92,9 @@ const Label = styled.span`
 
 const Title = styled.h2`
   font-size: clamp(1.9rem, 3.5vw, 2.8rem);
-  font-weight: 900;
-  letter-spacing: -0.8px;
-  line-height: 1.15;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  line-height: 1.2;
   color: var(--text-hi);
   margin-bottom: 1.2rem;
 `;
@@ -123,10 +118,16 @@ const Skill = styled.li`
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  font-size: 0.92rem;
+  font-size: 0.9rem;
   color: var(--text-mid);
-  font-weight: 500;
 `;
+
+const metrics = [
+  { num: '34+', label: 'Negocios digitalizados' },
+  { num: '3+', label: 'Años entregando resultados' },
+  { num: '19', label: 'Empresas activas' },
+  { num: '24/7', label: 'Soporte y disponibilidad' },
+];
 
 const skills = [
   'Tiendas online y e-commerce', 'Automatización de operaciones',
@@ -148,35 +149,32 @@ export default function About() {
   return (
     <Wrap id="sobre-mi">
       <Inner>
-        <ImgSide>
+        <VisualSide>
           <motion.div {...ent(0)}>
-            <PhotoFrame>
-              <img
-                src="https://picsum.photos/seed/devlisis-dev-portrait/840/1050"
-                alt="Foto del desarrollador"
-              />
-            </PhotoFrame>
-            <StatStrip>
-              <Stat>
-                <StatNum>34+</StatNum>
-                <StatLabel>Negocios digitalizados</StatLabel>
-              </Stat>
-              <Stat>
-                <StatNum>3+</StatNum>
-                <StatLabel>Años de resultados</StatLabel>
-              </Stat>
-              <Stat>
-                <StatNum>19</StatNum>
-                <StatLabel>Empresas activas</StatLabel>
-              </Stat>
-            </StatStrip>
+            <VisualGrid>
+              <QuoteCard>
+                <QuoteTag>devlisis</QuoteTag>
+                <QuoteText>
+                  No vendemos código.<br />
+                  Entregamos resultados<br />
+                  para tu negocio.
+                </QuoteText>
+              </QuoteCard>
+
+              {metrics.map(({ num, label }) => (
+                <MetricCard key={label}>
+                  <MetricNum>{num}</MetricNum>
+                  <MetricLabel>{label}</MetricLabel>
+                </MetricCard>
+              ))}
+            </VisualGrid>
           </motion.div>
-        </ImgSide>
+        </VisualSide>
 
         <TextSide>
           <motion.div {...ent(0.1)}>
             <Label>¿Quiénes somos?</Label>
-            <Title>No vendemos código. Entregamos resultados para tu negocio.</Title>
+            <Title>Tecnología de alto nivel, al alcance de tu negocio.</Title>
           </motion.div>
 
           <motion.div {...ent(0.18)}>
@@ -197,7 +195,7 @@ export default function About() {
               {skills.map(s => (
                 <Skill key={s}>
                   <CheckCircle
-                    size={16}
+                    size={15}
                     weight="fill"
                     style={{ color: 'var(--accent)', flexShrink: 0 }}
                   />

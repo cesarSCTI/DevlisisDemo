@@ -4,7 +4,9 @@
       "Bash(npm run *)",
       "Bash(npx --yes acorn --ecma2022 --module src/components/Footer.jsx)",
       "Bash(npx vite *)",
-      "Bash(node *)"
+      "Bash(node *)",
+      "Bash(npx --node-options=\"\" tsc --noEmit)",
+      "Bash(npm install *)"
     ]
   }
 }

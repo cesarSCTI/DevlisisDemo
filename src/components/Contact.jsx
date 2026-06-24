@@ -13,17 +13,21 @@ const Inner = styled.div`
   max-width: 1000px;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: 1fr 1.5fr;
-  gap: 5rem;
-  align-items: start;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 3.5rem;
+  align-items: stretch;
 
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
-    gap: 3rem;
+    gap: 2.5rem;
   }
 `;
 
-const TextSide = styled.div``;
+const TextSide = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+`;
 
 const SectionLabel = styled.span`
   display: block;
@@ -100,7 +104,12 @@ const InfoVal = styled.div`
   color: var(--text-hi);
 `;
 
-const FormSide = styled.div``;
+const FormSide = styled.div`
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 2.2rem 2.4rem;
+`;
 
 const Form = styled.form`
   display: flex;
@@ -140,8 +149,30 @@ const inputBase = `
   &::placeholder { color: var(--text-lo); }
 `;
 
+const selectBase = `
+  padding: 0.78rem 1rem;
+  background: var(--bg-surface);
+  border-radius: var(--radius-sm);
+  color: var(--text-hi);
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.2s, background 0.2s;
+  appearance: none;
+  cursor: pointer;
+`;
+
 const Input = styled.input`
   ${inputBase}
+  border: 1px solid ${({ $error }) => $error ? '#ef4444' : 'var(--border-strong)'};
+
+  &:focus-visible {
+    border-color: ${({ $error }) => $error ? '#ef4444' : 'var(--accent)'};
+    background: ${({ $error }) => $error ? 'rgba(239,68,68,0.04)' : 'rgba(79,70,229,0.04)'};
+  }
+`;
+
+const Select = styled.select`
+  ${selectBase}
   border: 1px solid ${({ $error }) => $error ? '#ef4444' : 'var(--border-strong)'};
 
   &:focus-visible {
@@ -169,20 +200,23 @@ const ErrorMsg = styled.span`
 `;
 
 const Submit = styled.button`
-  padding: 0.85rem;
-  background: var(--accent);
+  padding: 0.85rem 1.2rem;
+  background: #25D366;
   color: #fff;
   border-radius: var(--radius-sm);
   font-size: 1rem;
-  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
   transition: background 0.2s, box-shadow 0.2s, transform 0.15s;
-  box-shadow: var(--shadow-accent);
+  box-shadow: 0 4px 20px rgba(37, 211, 102, 0.3);
 
   @media (hover: hover) and (pointer: fine) {
     &:hover {
-      background: var(--accent-dark);
+      background: #20bd5a;
       transform: translateY(-2px);
-      box-shadow: var(--shadow-accent-lg);
+      box-shadow: 0 8px 28px rgba(37, 211, 102, 0.4);
     }
   }
   &:active { transform: scale(0.98); }
@@ -199,13 +233,15 @@ const Success = styled.div`
   font-size: 0.95rem;
 `;
 
+const WA_NUMBER = '13128472931';
+
 const contactInfo = [
   {
     Icon: Envelope, label: 'Email', val: 'contacto@devlisis.com', href: 'mailto:contacto@devlisis.com',
     bg: 'rgba(79,70,229,0.1)', color: 'var(--accent)',
   },
   {
-    Icon: WhatsappLogo, label: 'WhatsApp', val: '+1 (312) 847-2931', href: '#',
+    Icon: WhatsappLogo, label: 'WhatsApp', val: '+1 (312) 847-2931', href: `https://wa.me/${WA_NUMBER}`,
     bg: 'rgba(5,150,105,0.1)', color: '#059669',
   },
   {
@@ -214,13 +250,21 @@ const contactInfo = [
   },
 ];
 
+const SERVICES = [
+  'Presencia digital profesional',
+  'Automatización de procesos',
+  'Tu app en el celular de tus clientes',
+  'Diseño que genera confianza',
+  'Tu plataforma siempre disponible',
+  'Inteligencia artificial aplicada',
+];
+
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export default function Contact() {
-  const [form, setForm] = useState({ name: '', email: '', subject: '', message: '' });
+  const [form, setForm] = useState({ name: '', email: '', service: '', message: '' });
   const [errors, setErrors] = useState({});
   const [sent, setSent] = useState(false);
-  const [loading, setLoading] = useState(false);
   const reduce = useReducedMotion();
 
   const validate = () => {
@@ -228,7 +272,7 @@ export default function Contact() {
     if (!form.name.trim()) errs.name = 'El nombre es requerido';
     if (!form.email.trim()) errs.email = 'El email es requerido';
     else if (!EMAIL_RE.test(form.email)) errs.email = 'Ingresa un email válido';
-    if (!form.subject.trim()) errs.subject = 'El asunto es requerido';
+    if (!form.service) errs.service = 'Selecciona un servicio';
     if (!form.message.trim()) errs.message = 'El mensaje es requerido';
     return errs;
   };
@@ -238,12 +282,12 @@ export default function Contact() {
     const errs = validate();
     if (Object.keys(errs).length) { setErrors(errs); return; }
     setErrors({});
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      setSent(true);
-      setForm({ name: '', email: '', subject: '', message: '' });
-    }, 1400);
+
+    const text = `Hola, soy ${form.name} (${form.email}).\n\nServicio de interés: ${form.service}\n\n${form.message}`;
+    window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(text)}`, '_blank', 'noopener,noreferrer');
+
+    setSent(true);
+    setForm({ name: '', email: '', service: '', message: '' });
   };
 
   const ent = (delay = 0) => ({
@@ -303,11 +347,13 @@ export default function Contact() {
                 </Field>
               </Row>
               <Field>
-                <InputLabel htmlFor="subject">Asunto</InputLabel>
-                <Input id="subject" type="text" placeholder="¿En qué podemos ayudarte?" value={form.subject}
-                  $error={!!errors.subject}
-                  onChange={e => setForm({ ...form, subject: e.target.value })} />
-                {errors.subject && <ErrorMsg>{errors.subject}</ErrorMsg>}
+                <InputLabel htmlFor="service">Servicio de interés</InputLabel>
+                <Select id="service" value={form.service} $error={!!errors.service}
+                  onChange={e => setForm({ ...form, service: e.target.value })}>
+                  <option value="" disabled>Selecciona un servicio…</option>
+                  {SERVICES.map(s => <option key={s} value={s}>{s}</option>)}
+                </Select>
+                {errors.service && <ErrorMsg>{errors.service}</ErrorMsg>}
               </Field>
               <Field>
                 <InputLabel htmlFor="message">Mensaje</InputLabel>
@@ -317,9 +363,10 @@ export default function Contact() {
                 {errors.message && <ErrorMsg>{errors.message}</ErrorMsg>}
               </Field>
               {sent
-                ? <Success>Mensaje enviado. Te contactaré en breve.</Success>
-                : <Submit type="submit" disabled={loading}>
-                    {loading ? 'Enviando...' : 'Quiero empezar mi proyecto'}
+                ? <Success>¡Listo! Abrimos WhatsApp con tu mensaje. ¡Nos vemos pronto!</Success>
+                : <Submit type="submit">
+                    <WhatsappLogo size={20} weight="fill" />
+                    Enviar mi idea por WhatsApp
                   </Submit>
               }
             </Form>

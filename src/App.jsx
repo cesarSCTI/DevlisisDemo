@@ -10,6 +10,7 @@ import Hero from './components/Hero';
 import Marquee from './components/Marquee';
 import Services from './components/Services';
 import About from './components/About';
+import Process from './components/Process';
 import Portfolio from './components/Portfolio';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
@@ -25,6 +26,7 @@ function App() {
         <Marquee />
         <Services />
         <About />
+        <Process />
         <Portfolio />
         <Contact />
       </main>
